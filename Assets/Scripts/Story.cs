@@ -34,15 +34,8 @@ public class Story
     {
         foreach (var player in players)
         {
-            if (player.IsMurderer)
-            {
-                player.Clue = new MurderClue();
-            }
-            else
-            {
-                var otherPlayers = players.Except(new[] { player });
-                player.Clue = ClueBank.GetClue(otherPlayers);
-            }
+            var otherPlayers = players.Except(new[] { player });
+            player.Clue = ClueBank.GetClue(otherPlayers);
         }
     }
 
@@ -50,6 +43,7 @@ public class Story
     {
         var falsifyingClues = 
             players
+                .Where(p => !p.IsMurderer)
                 .Select(p => p.Clue)
                 .OfType<FalsifyingClue>()
                 .ToHashSet();
@@ -64,10 +58,12 @@ public class Story
             Clue clue = root;
             while (clue is FalsifyingClue falsifyingClue)
             {
-                if (falsifyingClue.IsCanceled) break;
-
                 clue = falsifyingClue.GetFalseClue();
-                clue.Negate();
+
+                if (!falsifyingClue.IsCanceled)
+                {
+                    clue.Negate();
+                }
             }
         }
     }
