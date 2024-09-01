@@ -1,0 +1,66 @@
+assign n roles to n character cards
+n players
+witnesses: players / 2 + 1
+murders: players - witnesses
+
+assign n texts to each character card
+text cards have dependencies
+draw a dependency graph
+
+
+clues: "You have evidence that ..."
+
+(role clue) A and B are equally trustworthy.They must work together.
+(role clue) A and B are on opposite teams.One of them is a murderer.
+
+
+(role clue) exactly one of A, B and C is a murder.
+(role clue) exactly one of A, B and C is innocent.
+
+
+(role clue) exactly two of A, B and C is a murder.
+(role clue) exactly two of A, B and C is innocent.
+
+
+(role clue) at most one of A, B and C is a murder.
+(role clue) at most one of A, B and C is innocent.
+
+(role clue) at most two of A, B and C is a murder.
+(role clue) at most two of A, B and C is innocent.
+
+(role clue) at least one of A, B and C is a murder.
+(role clue) at least one of A and B is a murder.
+(role clue) at least one of A, B and C is innocent.
+(role clue) at least one of A and B is innocent.
+
+
+(meta clue) the clue given to A is invalid.It may or may not be true. 
+(meta clue) the clue given to A is false. It cannot be true. 
+
+it is important that all clues have equal probability of being drawn
+proposal: 
+Distribute roles
+Distribute role/meta clues without content
+Order the list: meta clues, then role clues
+Point meta clues to players
+Now it is decided which players should have invalid and false clues.
+Traverse through all meta clues starting from the roots of the meta clues graph.
+
+If an invalid-> clue is determined invalid, then what they point to should not be affected
+If an invalid-> clue is determined false, then what they point to should not be affected
+If a false-> clue is determined invalid, then what they point to should not be affected
+If a false-> clue is determined false, then what they point to should not be affected
+That means, skip all meta clues marked as false or invalid. 
+
+
+If an innocent clue is marked false, then they must both be murderers. 
+
+
+abstract class clue
+void Negate();
+void Invalidate();
+string GetDescription();
+
+abstract class metaClue : clue
+
+clue GetPointer();
