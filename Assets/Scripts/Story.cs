@@ -6,6 +6,8 @@ using UnityUtils;
 
 public class Story
 {
+    public Player[] Players { get; }
+    
     public Story(string[] playerNames, int murdererCount)
     {
         var players = playerNames.Select(name => new Player { Name = name }).ToArray();
@@ -15,8 +17,9 @@ public class Story
         GenerateClues(players);
         var rootFalsifyingClues = GetRootFalsifyingClues(players);
         FalsifyClues(rootFalsifyingClues);
-        
+
         PrintStory(players);
+        Players = players;
     }
 
     private static void PrintStory(Player[] players)
@@ -35,7 +38,7 @@ public class Story
         foreach (var player in players)
         {
             var otherPlayers = players.Except(new[] { player });
-            player.Clue = player.IsMurderer ? new MurderClue() : ClueBank.GetClue(otherPlayers);
+            player.Clue = player.IsMurderer ? ClueBank.GetClue(players) : ClueBank.GetClue(otherPlayers);
         }
     }
 

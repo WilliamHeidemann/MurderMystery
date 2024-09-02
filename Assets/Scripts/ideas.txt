@@ -37,6 +37,8 @@ clues: "You have evidence that ..."
 (meta clue) the clue given to A is invalid.It may or may not be true. 
 (meta clue) the clue given to A is false. It cannot be true. 
 
+(meta clue) At least one of A and B has a clue that is strictly wrong. 
+
 it is important that all clues have equal probability of being drawn
 proposal: 
 Distribute roles
