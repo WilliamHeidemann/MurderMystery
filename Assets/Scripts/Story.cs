@@ -35,7 +35,7 @@ public class Story
         foreach (var player in players)
         {
             var otherPlayers = players.Except(new[] { player });
-            player.Clue = ClueBank.GetClue(otherPlayers);
+            player.Clue = player.IsMurderer ? new MurderClue() : ClueBank.GetClue(otherPlayers);
         }
     }
 

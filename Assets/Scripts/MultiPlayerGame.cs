@@ -1,11 +1,12 @@
 using System;
+using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityUtils;
 using UtilityToolkit.Editor;
 
-public class Game : MonoBehaviour
+public class MultiPlayerGame : MonoBehaviour
 {
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Transform namesContainer;
@@ -45,5 +46,13 @@ public class Game : MonoBehaviour
     {
         var names = new string[] { "Silje", "William", "Albert", "Jonas", "Laurits", "Oscar", "Andreas" };
         var story = new Story(names.Take(players).ToArray(), murderers);
+    }
+
+    [Button]
+    public void TestNamesList()
+    {
+        var namesFile = Resources.Load<TextAsset>("names");
+        var names = namesFile.text.Split("\n");
+        names.ForEach(Debug.Log);
     }
 }
