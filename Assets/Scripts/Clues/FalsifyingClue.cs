@@ -9,9 +9,9 @@ namespace Clues
         private readonly Player _playerToFalsify;
         public bool IsCanceled;
 
-        public FalsifyingClue(IEnumerable<Player> players)
+        public FalsifyingClue(Player liar)
         {
-            _playerToFalsify = players.ToList().Shuffle().First();
+            _playerToFalsify = liar;
             Description = $"{_playerToFalsify.Name}'s clue is strictly false.";
         }
 

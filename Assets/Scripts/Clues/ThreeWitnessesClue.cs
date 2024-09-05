@@ -6,18 +6,21 @@ namespace Clues
 {
     public class ThreeWitnessesClue : Clue
     {
-        private Player[] witnesses;
+        private readonly string _witness1;
+        private readonly string _witness2;
+        private readonly string _witness3;
 
-        public ThreeWitnessesClue(IEnumerable<Player> players)
+        public ThreeWitnessesClue(string witness1, string witness2, string witness3)
         {
-            players = players.ToList().Shuffle();
-            witnesses = players.Where(p => p.IsMurderer == false).Take(3).ToArray();
-            Description = $"{witnesses[0].Name}, {witnesses[1].Name} and {witnesses[2].Name} are all innocent witnesses.";
+            _witness1 = witness1;
+            _witness2 = witness2;
+            _witness3 = witness3;
+            Description = $"{_witness1}, {_witness2} and {_witness3} are all innocent witnesses.";
         }
 
         public override void Negate()
         {
-            Description = $"Either {witnesses[0].Name}, {witnesses[1].Name} or {witnesses[2].Name} is the murderer.";
+            Description = $"Either {_witness1}, {_witness2} or {_witness3} is the murderer.";
         }
     }
 }

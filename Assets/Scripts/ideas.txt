@@ -66,3 +66,20 @@ string GetDescription();
 abstract class metaClue : clue
 
 clue GetPointer();
+
+
+
+witnesses need to have logic to assign correct names to clue 
+
+murderers might say anything, and should assign any names
+
+So: The clue itself should not contain logic for choosing player names. 
+A clue can: 
+- Provide the hint
+- Be negated
+
+
+
+
+
+

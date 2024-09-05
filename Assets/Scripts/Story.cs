@@ -1,25 +1,35 @@
 using System.Collections.Generic;
 using System.Linq;
 using Clues;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityUtils;
+using For = UtilityToolkit.Runtime.For;
 
 public class Story
 {
     public Player[] Players { get; }
-    
+
     public Story(string[] playerNames, int murdererCount)
     {
-        var players = playerNames.Select(name => new Player { Name = name }).ToArray();
-        var murderers = players.Shuffle().Take(murdererCount);
-        murderers.ForEach(m => m.IsMurderer = true);
+        Players = playerNames.Select(name => new Player { Name = name }).ToArray();
+        Players.ForEach(p => Debug.Log(p.Name));
+        var murderers = Players.Shuffle().Take(murdererCount);
+        murderers.ForEach(SetMurderer);
+        Players.ForEach(GenerateClue);
+        
+        FalsifyClues(GetRootFalsifyingClues(Players));
+        
+        PrintStory(Players);
+        return;
 
-        GenerateClues(players);
-        var rootFalsifyingClues = GetRootFalsifyingClues(players);
-        FalsifyClues(rootFalsifyingClues);
+        void SetMurderer(Player m) => m.IsMurderer = true;
 
-        PrintStory(players);
-        Players = players;
+        void GenerateClue(Player player)
+        {
+            var otherPlayers = Players.Except(new[] { player });
+            player.Clue = player.IsMurderer ? ClueBank.GetFakeClue(otherPlayers) : ClueBank.GetClue(otherPlayers);
+        }
     }
 
     private static void PrintStory(Player[] players)
@@ -33,25 +43,18 @@ public class Story
         Debug.Log($"\n");
     }
 
-    private static void GenerateClues(Player[] players)
-    {
-        foreach (var player in players)
-        {
-            var otherPlayers = players.Except(new[] { player });
-            player.Clue = player.IsMurderer ? ClueBank.GetClue(players) : ClueBank.GetClue(otherPlayers);
-        }
-    }
-
     private static IEnumerable<FalsifyingClue> GetRootFalsifyingClues(Player[] players)
     {
-        var falsifyingClues = 
-            players
+        var falsifyingClues =
+            Enumerable.ToHashSet(players
                 .Where(p => !p.IsMurderer)
                 .Select(p => p.Clue)
-                .OfType<FalsifyingClue>()
-                .ToHashSet();
-        
-        return falsifyingClues.Where(clue => falsifyingClues.All(c => c.GetFalseClue() != clue));
+                .OfType<FalsifyingClue>());
+
+        return falsifyingClues.Where(IsNotPointedTo);
+
+        bool IsNotPointedTo(FalsifyingClue clue) =>
+            falsifyingClues.All(c => c.GetFalseClue() != clue);
     }
 
     private static void FalsifyClues(IEnumerable<FalsifyingClue> roots)
