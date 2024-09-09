@@ -18,6 +18,7 @@ public class SinglePlayerGame : MonoBehaviour
     [Header("Game Components")]
     [SerializeField] private Transform frame;
     [SerializeField] private TextMeshProUGUI allNames;
+    [SerializeField] private TextMeshProUGUI solution;
     
     [Header("Prefabs")]
     [SerializeField] private GameObject playerCluePrefab;
@@ -44,5 +45,20 @@ public class SinglePlayerGame : MonoBehaviour
             var clue = Instantiate(playerCluePrefab, frame);
             clue.GetComponentInChildren<TextMeshProUGUI>().text = $"{player.Name}:\n{player.Clue.GetDescription()}".Replace("\r", "");
         });
+    }
+
+    public void ShowSolution()
+    {
+        var murderers = 
+            _story.Players
+                .Where(p => p.IsMurderer)
+                .Select(p => p.Name)
+                .ToArray();
+
+        var murdererNames = string.Join(", ", murderers);
+
+        var s = murderers.Length > 1 ? "s" : "";
+        
+        solution.text = $"Murderer{s}: " + murdererNames;
     }
 }

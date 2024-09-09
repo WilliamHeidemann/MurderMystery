@@ -69,6 +69,7 @@ public class Story
             Clue clue = root;
             while (clue is FalsifyingClue falsifyingClue)
             {
+                if (clue.isFake) break;
                 clue = falsifyingClue.GetFalseClue();
 
                 if (!falsifyingClue.IsCanceled)

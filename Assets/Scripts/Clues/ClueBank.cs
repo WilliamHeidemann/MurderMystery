@@ -31,19 +31,26 @@ namespace Clues
         public static Clue GetFakeClue(IEnumerable<Player> otherPlayers)
         {
             var players = otherPlayers.ToList().Shuffle();
+            Clue clue;
             switch (Random.Range(0, 3))
             {
                 case 0:
                     var fakeSuspects = AnyThreeNames(players);
-                    return new ThreeSuspectsClue(fakeSuspects[0], fakeSuspects[1], fakeSuspects[2]);
+                    clue = new ThreeSuspectsClue(fakeSuspects[0], fakeSuspects[1], fakeSuspects[2]);
+                    break;
                 case 1:
                     var fakeWitnesses = AnyThreeNames(players);
-                    return new ThreeWitnessesClue(fakeWitnesses[0], fakeWitnesses[1], fakeWitnesses[2]);
+                    clue = new ThreeWitnessesClue(fakeWitnesses[0], fakeWitnesses[1], fakeWitnesses[2]);
+                    break;
                 case 2:
-                    return new FalsifyingClue(players.First());
+                    clue = new FalsifyingClue(players.First());
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            clue.isFake = true;
+            return clue;
         }
 
         private static string[] GetSuspects(IList<Player> players)
