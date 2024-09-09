@@ -1,10 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Clues;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityUtils;
-using For = UtilityToolkit.Runtime.For;
 
 public class Story
 {
@@ -12,22 +10,28 @@ public class Story
 
     public Story(string[] playerNames, int murdererCount)
     {
-        Players = playerNames.Select(name => new Player { Name = name }).ToArray();
-        Players.ForEach(p => Debug.Log(p.Name));
-        var murderers = Players.Shuffle().Take(murdererCount);
+        var players = playerNames.Select(name => new Player { Name = name }).ToArray();
+        var murderers = players.Shuffle().Take(murdererCount);
         murderers.ForEach(SetMurderer);
-        Players.ForEach(GenerateClue);
+        players.ForEach(GenerateClue);
         
-        FalsifyClues(GetRootFalsifyingClues(Players));
+        FalsifyClues(GetRootFalsifyingClues(players));
         
-        PrintStory(Players);
+        PrintStory(players);
+
+        Players = players.Shuffle().ToArray();
         return;
 
         void SetMurderer(Player m) => m.IsMurderer = true;
 
         void GenerateClue(Player player)
         {
-            var otherPlayers = Players.Except(new[] { player });
+            if (players.Length <= 4)
+            {
+                Debug.LogWarning($"{players.Length} players are not enough to safely generate clues. Must be at least 5 players.");
+                return;
+            }
+            var otherPlayers = players.Except(new[] { player });
             player.Clue = player.IsMurderer ? ClueBank.GetFakeClue(otherPlayers) : ClueBank.GetClue(otherPlayers);
         }
     }
@@ -46,10 +50,11 @@ public class Story
     private static IEnumerable<FalsifyingClue> GetRootFalsifyingClues(Player[] players)
     {
         var falsifyingClues =
-            Enumerable.ToHashSet(players
+            players
                 .Where(p => !p.IsMurderer)
                 .Select(p => p.Clue)
-                .OfType<FalsifyingClue>());
+                .OfType<FalsifyingClue>()
+                .ToArray();
 
         return falsifyingClues.Where(IsNotPointedTo);
 

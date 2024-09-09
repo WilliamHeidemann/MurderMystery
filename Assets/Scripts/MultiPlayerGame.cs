@@ -44,7 +44,7 @@ public class MultiPlayerGame : MonoBehaviour
     [Button]
     public void TestStory()
     {
-        var names = new string[] { "Silje", "William", "Albert", "Jonas", "Laurits", "Oscar", "Andreas" };
+        var names = new[] { "Silje", "William", "Albert", "Jonas", "Laurits", "Oscar", "Andreas" };
         var story = new Story(names.Take(players).ToArray(), murderers);
     }
 

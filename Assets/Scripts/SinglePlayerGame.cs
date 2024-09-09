@@ -8,15 +8,19 @@ using UnityUtils;
 
 public class SinglePlayerGame : MonoBehaviour
 {
+    [Header("UI Components")]
     [SerializeField] private Slider suspectsSlider;
     [SerializeField] private TextMeshProUGUI suspectsCounter;
 
     [SerializeField] private Slider murderersSlider;
     [SerializeField] private TextMeshProUGUI murderersCounter;
 
+    [Header("Game Components")]
     [SerializeField] private Transform frame;
-    [SerializeField] private Text allNames;
-    [SerializeField] private Text playerCluePrefab;
+    [SerializeField] private TextMeshProUGUI allNames;
+    
+    [Header("Prefabs")]
+    [SerializeField] private GameObject playerCluePrefab;
     
     private Story _story;
 
@@ -33,12 +37,12 @@ public class SinglePlayerGame : MonoBehaviour
         var playerNames = lineSeperatedNames.Shuffle().Take((int)suspectsSlider.value).ToArray();
         var murdererCount = (int)murderersSlider.value;
         _story = new Story(playerNames, murdererCount);
-        var names = "Suspects: " + string.Join(", ", _story.Players.Select(p => p.Name));
+        var names = "Suspects: " + string.Join(", ", _story.Players.Select(p => p.Name)).Replace("\r", "");
         allNames.text = names;
         _story.Players.ForEach(player =>
         {
             var clue = Instantiate(playerCluePrefab, frame);
-            clue.text = $"{player.Name}: {player.Clue.GetDescription()}";
+            clue.GetComponentInChildren<TextMeshProUGUI>().text = $"{player.Name}:\n{player.Clue.GetDescription()}".Replace("\r", "");
         });
     }
 }
