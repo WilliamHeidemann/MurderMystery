@@ -6,21 +6,26 @@ using UnityEngine;
 using UnityUtils;
 using UtilityToolkit.Editor;
 
-public class MultiPlayerGame : MonoBehaviour
+public class LocalMultiPlayerLobby : MonoBehaviour
 {
+    [Header("Lobby")]
     [SerializeField] private TMP_InputField inputField;
     [SerializeField] private Transform namesContainer;
     [SerializeField] private TextMeshProUGUI nameLabelPrefab;
     
-    private Story _story;
-    private readonly Lobby _lobby = new Lobby();
+    private readonly Lobby _lobby = new();
 
     public void StartGame()
     {
         var playerNames = _lobby.GetNames();
+        if (playerNames.Length <= 4)
+        {
+            return;
+        }
         var witnessCount = playerNames.Length / 2 + 1;
         var murdererCount = playerNames.Length - witnessCount;
-        _story = new Story(playerNames, murdererCount);
+        var story = new Story(playerNames, murdererCount);
+        ClueHandOut.Instance.Setup(story);
     }
 
     public void AddPlayer()
@@ -33,6 +38,7 @@ public class MultiPlayerGame : MonoBehaviour
         var playerName = inputField.text;
         _lobby.AddPlayer(playerName);
         inputField.text = string.Empty;
+        inputField.Select();
         var nameLabel = Instantiate(nameLabelPrefab, namesContainer);
         nameLabel.text = playerName;
     }
@@ -46,13 +52,5 @@ public class MultiPlayerGame : MonoBehaviour
     {
         var names = new[] { "Silje", "William", "Albert", "Jonas", "Laurits", "Oscar", "Andreas" };
         var story = new Story(names.Take(players).ToArray(), murderers);
-    }
-
-    [Button]
-    public void TestNamesList()
-    {
-        var namesFile = Resources.Load<TextAsset>("names");
-        var names = namesFile.text.Split("\n");
-        names.ForEach(Debug.Log);
     }
 }

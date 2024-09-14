@@ -13,7 +13,7 @@ public class Story
         var players = playerNames.Select(name => new Player { Name = name }).ToArray();
         var murderers = players.Shuffle().Take(murdererCount);
         murderers.ForEach(SetMurderer);
-        players.ForEach(GenerateClue);
+        players.ForEach(SetClue);
         
         FalsifyClues(GetRootFalsifyingClues(players));
         
@@ -24,7 +24,7 @@ public class Story
 
         void SetMurderer(Player m) => m.IsMurderer = true;
 
-        void GenerateClue(Player player)
+        void SetClue(Player player)
         {
             if (players.Length <= 4)
             {
