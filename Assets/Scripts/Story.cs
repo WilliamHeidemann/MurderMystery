@@ -10,27 +10,25 @@ public class Story
 
     public Story(string[] playerNames, int murdererCount)
     {
-        var players = playerNames.Select(name => new Player { Name = name }).ToArray();
-        var murderers = players.Shuffle().Take(murdererCount);
-        murderers.ForEach(SetMurderer);
+        var players = playerNames
+            .Shuffle()
+            .Select((name, index) => new Player(name, index < murdererCount))
+            .ToArray();
         players.ForEach(SetClue);
-        
         FalsifyClues(GetRootFalsifyingClues(players));
-        
         PrintStory(players);
-
         Players = players.Shuffle().ToArray();
         return;
-
-        void SetMurderer(Player m) => m.IsMurderer = true;
 
         void SetClue(Player player)
         {
             if (players.Length <= 4)
             {
-                Debug.LogWarning($"{players.Length} players are not enough to safely generate clues. Must be at least 5 players.");
+                Debug.LogWarning(
+                    $"{players.Length} players are not enough to safely generate clues. Must be at least 5 players.");
                 return;
             }
+
             var otherPlayers = players.Except(new[] { player });
             player.Clue = player.IsMurderer ? ClueBank.GetFakeClue(otherPlayers) : ClueBank.GetClue(otherPlayers);
         }

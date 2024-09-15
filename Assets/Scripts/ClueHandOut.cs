@@ -68,9 +68,10 @@ public class ClueHandOut : Singleton<ClueHandOut>
         {
             const string murderer = "You are the murderer!\n\n";
             var team = murderers.Length > 1
-                ? "Allied murderers: " + JoinWithAnd(murderers)
-                : "You are the only murderer";
-            textArea.text = murderer + team;
+                ? "Allied murderers: " + JoinWithAnd(murderers) + "\n\n"
+                : "You are the only murderer\n\n";
+            var exampleClue = $"Make up a clue or use this example:\n{player.Clue.GetDescription()}";
+            textArea.text = murderer + team + exampleClue;
         }
         else
         {
