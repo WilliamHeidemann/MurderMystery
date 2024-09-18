@@ -55,7 +55,7 @@ public class SinglePlayerGame : MonoBehaviour
                 .Select(p => p.Name)
                 .ToArray();
 
-        var murdererNames = string.Join(", ", murderers);
+        var murdererNames = string.Join(", ", murderers).Replace("\r", "");
 
         var s = murderers.Length > 1 ? "s" : "";
         

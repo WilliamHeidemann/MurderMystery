@@ -3926,7 +3926,7 @@ MonoBehaviour:
   inputField: {fileID: 241781622}
   namesContainer: {fileID: 1834399587}
   nameLabelPrefab: {fileID: 6087360684604623588, guid: 1d064a2ddf1891042aa5b489d36d1ba1, type: 3}
-  players: 5
+  players: 6
   murderers: 1
 --- !u!114 &1319952469
 MonoBehaviour:

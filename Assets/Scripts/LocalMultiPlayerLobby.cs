@@ -43,14 +43,14 @@ public class LocalMultiPlayerLobby : MonoBehaviour
         nameLabel.text = playerName;
     }
 
-    [Range(3, 7), SerializeField]
+    [Range(6, 10), SerializeField]
     private int players;
     [Range(1, 3), SerializeField]
     private int murderers;
     [Button]
     public void TestStory()
     {
-        var names = new[] { "Silje", "William", "Albert", "Jonas", "Laurits", "Oscar", "Andreas" };
+        var names = new[] { "Silje", "William", "Albert", "Jonas", "Laurits", "Oscar", "Andreas", "Frederik", "Emil", "Simon" };
         var story = new Story(names.Take(players).ToArray(), murderers);
     }
 }

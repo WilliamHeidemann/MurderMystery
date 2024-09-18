@@ -6,21 +6,23 @@ namespace Clues
 {
     public class ThreeSuspectsClue : Clue
     {
-        private readonly string _suspect1;
-        private readonly string _suspect2;
-        private readonly string _suspect3;
+        public readonly string Suspect1;
+        public readonly string Suspect2;
+        public readonly string Suspect3;
+        public bool IsNegated { get; private set; }
 
         public ThreeSuspectsClue(string suspect1, string suspect2, string suspect3)
         {
-            _suspect1 = suspect1;
-            _suspect2 = suspect2;
-            _suspect3 = suspect3;
-            Description = $"Either {_suspect1}, {_suspect2} or {_suspect3} is the murderer.";
+            Suspect1 = suspect1;
+            Suspect2 = suspect2;
+            Suspect3 = suspect3;
+            Description = $"Either {Suspect1}, {Suspect2} or {Suspect3} is the murderer.";
         }
 
         public override void Negate()
         {
-            Description = $"{_suspect1}, {_suspect2} and {_suspect3} are all innocent witnesses.";
+            Description = $"{Suspect1}, {Suspect2} and {Suspect3} are all innocent witnesses.";
+            IsNegated = true;
         }
     }
 }
